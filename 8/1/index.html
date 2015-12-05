@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="user in userRating.data.records | orderBy : '-points'">
+                <tr ng-repeat="user in userRating.records track by user.id" >
                     <td>{{$index + 1}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.points}}</td>
@@ -28,6 +28,7 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
