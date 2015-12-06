@@ -1,4 +1,4 @@
-var app = angular.module('app', []);
+var app = angular.module('app', ['ngAnimate']);
 
 app.controller('someController', ['$scope', '$rootScope', 'mainService', function($scope, $rootScope, mainService) {
     $scope.userRating = mainService.getUserRating();
@@ -59,7 +59,7 @@ app.service('mainService', ['$http', '$rootScope', function($http, $rootScope) {
                 userRating.records.forEach(function(oldObj, index) {
                     if (oldObj.id === id) {
                         userRating.records[index].points = updatedObj.points;
-                        // console.log(updatedObj.points);
+                        console.log(updatedObj.points);
                         return;
                     }
                 });
@@ -75,7 +75,7 @@ app.service('mainService', ['$http', '$rootScope', function($http, $rootScope) {
     }
 
     function userRatingSort(){
-        userRating.records = _.sortByOrder(userRating.records, 'points', 'desc');
+        userRating.records = _.sortByOrder(userRating.records, ['points', 'name'], ['desc', 'asc']);
     }
 
 }]);

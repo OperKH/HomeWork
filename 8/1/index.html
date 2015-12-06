@@ -3,11 +3,12 @@
 <head>
     <meta charset=utf-8 />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 <body ng-controller="someController">
 
     <div class="container">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered ">
             <thead>
                 <tr>
                     <th>#</th>
@@ -16,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="user in userRating.records track by user.id" >
+                <tr class="animate-repeat" ng-repeat="user in userRating.records track by user.id" >
                     <td>{{$index + 1}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.points}}</td>
@@ -28,6 +29,7 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
 <script src="main.js"></script>
 </body>

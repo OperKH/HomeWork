@@ -1,0 +1,10 @@
+.animate-repeat {
+    transition:all ease 3s;
+    background-color: transparent;
+}
+.animate-repeat.ng-move {
+    background-color: transparent;
+}
+.animate-repeat.ng-move.ng-move-active {
+    background-color: lightgreen;
+}
