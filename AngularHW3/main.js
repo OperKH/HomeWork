@@ -15,7 +15,7 @@
       magicObject[groupName].push(ctrl);
     };
 
-    this.clicedGroup = function(groupName, ctrl) {
+    this.clickedGroup = function(groupName, ctrl) {
       magicObject[groupName].forEach(function(currCtrl) {
         if (ctrl !== currCtrl) {
           currCtrl.uncheck();
@@ -53,7 +53,7 @@
         magicService.addToGroup($scope.group, magicRadioCtrl);
         console.log("El:",$element);
         $element.on('click', function(){
-            magicService.clicedGroup($scope.group, magicRadioCtrl);
+            magicService.clickedGroup($scope.group, magicRadioCtrl);
         });
         $element.find('input').prop('checked', $scope.isChecked);
       },
