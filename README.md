@@ -9,6 +9,9 @@ AngularHW3 - Распределенный блок radio buttons
 
 AngularHW4 - Карусель
 
+AngularHW5 - Джедаи
 
 
-8 - Рейтинг
+
+8  - Рейтинг
+10 - Users Todo-list
