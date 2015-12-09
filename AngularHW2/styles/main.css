@@ -1,0 +1,32 @@
+
+.container {
+  text-align: justify;
+    border-color: #ccccff;
+}
+.container {
+    padding-top: 15px;
+}
+.sidebar{
+  top:0;
+  left:0;
+  position: absolute;
+  background-color: #333;
+  width: 250px;
+  height: 100%;
+  color: #fff;
+  overflow: hidden;
+  -webkit-transition: width .5s ease-in-out;
+     -moz-transition: width .5s ease-in-out;
+      -ms-transition: width .5s ease-in-out;
+       -o-transition: width .5s ease-in-out;
+          transition: width .5s ease-in-out;
+}
+
+.sidebar.sidebar-hidden {
+  width: 25px;
+}
+.box{
+  height: 100px;
+  width: 100px;
+  background-color: red;
+}
