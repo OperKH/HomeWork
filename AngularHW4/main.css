@@ -1,0 +1,59 @@
+.cards-wrapper {
+    position: relative;
+    height: 220px;
+    text-align: justify;
+}
+.card {
+    position: absolute;
+    bottom: 0;
+    transition: 1s ease;
+    transition-property: left, background-color, height, width;
+    display: inline-block;
+}
+
+.place1 {
+    left: 0;
+    background-color: #7692bf;
+    /*z-index: -1;*/
+}
+.place2 {
+    left: 9%;
+    background-color: #9d8d6e;
+}
+.place3 {
+    left: 22%;
+    background-color: #eec460;
+}
+.place4 {
+    left: 41%;
+    background-color: #cecece;
+}
+.place5 {
+    left: 60%;
+    background-color: #71c475;
+}
+.place6 {
+    left: 79%;
+    background-color: #464f54;
+}
+.place7 {
+    left: 92%;
+    background-color: #e998b3;
+}
+
+.place1,
+.place7 {
+    width: 8%;
+    height: 60%;
+}
+.place2,
+.place6 {
+    width: 12%;
+    height: 80%;
+}
+.place3,
+.place4,
+.place5 {
+    width: 18%;
+    height: 100%;
+}
