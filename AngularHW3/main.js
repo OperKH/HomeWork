@@ -1,65 +1,64 @@
 (function() {
-  var app = angular.module('app', []);
-  /*app.run(function($rootScope) {
-    $rootScope.hideSidebar = function() {
-      console.log('1');
-    }
-  });*/
-  app.service('magicService', function() {
-    console.log('magicService run');
-    var magicObject = {};
-    this.addToGroup = function(groupName, ctrl) {
-      if (!magicObject[groupName]) {
-        magicObject[groupName] = [];
-      }
-      magicObject[groupName].push(ctrl);
-    };
+    var app = angular.module('app', []);
 
-    this.clickedGroup = function(groupName, ctrl) {
-      magicObject[groupName].forEach(function(currCtrl) {
-        if (ctrl !== currCtrl) {
-          currCtrl.uncheck();
-        }
-      });
-    };
+    app.service('magicService', _magicService);
+    app.directive('magicRadio', ['magicService', _magicRadio]);
 
-    this.removeFromGroup = function(groupName, ctrl) {
-      var currentGroupArr = magicObject[groupName];
-      var indexof = currentGroupArr.indexOf(ctrl);
-      if (indexof !== -1) {
-        currentGroupArr.splice(indexof, 1);
-      }
-    };
-
-  });
-
-
-  app.directive('magicRadio', ['magicService', function(magicService) {
-    return {
-      restrict: 'E',
-      scope: {
-        group: '@',
-        isChecked: '@'
-      },
-      controller: function($scope, $element) {
-        this.uncheck = function() {
-          console.log('uncheck', $element);
-          $element.find('input').prop('checked', false);
+    function _magicService() {
+        console.log('magicService run');
+        var magicObject = {};
+        this.addToGroup = function(groupName, ctrl) {
+            if (!magicObject[groupName]) {
+                magicObject[groupName] = [];
+            }
+            magicObject[groupName].push(ctrl);
         };
-      },
-      require: 'magicRadio',
-      link: function($scope, $element, $attrs, magicRadioCtrl) {
-        console.log('magicRadioDirective run');
-        magicService.addToGroup($scope.group, magicRadioCtrl);
-        console.log("El:",$element);
-        $element.on('click', function(){
-            magicService.clickedGroup($scope.group, magicRadioCtrl);
-        });
-        $element.find('input').prop('checked', $scope.isChecked);
-      },
-      template: '<label><input type="radio"> Name: {{group}}</label>'
 
-    };
-  }]);
+        this.clickedGroup = function(groupName, ctrl) {
+            magicObject[groupName].forEach(function(currCtrl) {
+                if (ctrl !== currCtrl) {
+                    currCtrl.uncheck();
+                }
+            });
+        };
+
+        this.removeFromGroup = function(groupName, ctrl) {
+            var currentGroupArr = magicObject[groupName];
+            var indexof = currentGroupArr.indexOf(ctrl);
+            if (indexof !== -1) {
+                currentGroupArr.splice(indexof, 1);
+            }
+        };
+    }
+
+    function _magicRadio(magicService) {
+        return {
+            restrict: 'E',
+            require: 'magicRadio',
+            scope: {
+                group: '@',
+            },
+            controller: function($scope, $element) {
+                this.uncheck = function() {
+                    console.log('uncheck', $element);
+                    $element.find('input').prop('checked', false);
+                };
+            },
+            link: function($scope, $element, $attrs, magicRadioCtrl) {
+                console.log('magicRadioDirective run');
+                magicService.addToGroup($scope.group, magicRadioCtrl);
+
+                $element.find('input').on('click', function(e) {
+                    console.log('"'+$scope.group+'" group clicked');
+                    magicService.clickedGroup($scope.group, magicRadioCtrl);
+                });
+
+                $scope.$on('$destroy', function(){
+                    magicService.removeFromGroup($scope.group, magicRadioCtrl);
+                });
+            },
+            template: '<label><input type="radio">Name: {{group}}</label>'
+        };
+    }
 
 })();

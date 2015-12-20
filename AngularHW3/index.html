@@ -9,43 +9,33 @@
 </head>
 <body>
     <div class="container">
-        <dov class="row">
-            <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-6">
                 <div class="thumbnail">
-                    <div><magic-radio group="UFO_100"></magic-radio></div>
-                    <div><magic-radio group="Test_1" is-checked="true"></magic-radio></div>
-                    <div><magic-radio group="UFO_500"></magic-radio></div>
-                    <div><magic-radio group="Unicorn_3"></magic-radio></div>
-                    <div><magic-radio group="UFO_100"></magic-radio></div>
-                    <div><magic-radio group="UFO_100" is-checked="true"></magic-radio></div>
-                    <div><magic-radio group="UFO_100"></magic-radio></div>
-                    <div><magic-radio group="Unicorn_2"></magic-radio></div>
+                    <button ng-init="isShow = true" ng-click="isShow = !isShow">{{ isShow ? "Hide" : "Show"}}</button>
+                    <div ng-if="isShow">
+                        <div><magic-radio group="Test_1"></magic-radio></div>
+                        <div><magic-radio group="Test_1"></magic-radio></div>
+                        <div><magic-radio group="UFO_100"></magic-radio></div>
+                        <div><magic-radio group="UFO_100"></magic-radio></div>
+                        <div><magic-radio group="UFO_100"></magic-radio></div>
+                    </div>
+
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="thumbnail">
-                    <div><magic-radio group="Unicorn_2"></magic-radio></div>
-                    <div><magic-radio group="UFO_500"></magic-radio></div>
-                    <div><magic-radio group="UFO_500" is-checked="true"></magic-radio></div>
-                    <div><magic-radio group="Unicorn_3"></magic-radio></div>
-                    <div><magic-radio group="UFO_100"></magic-radio></div>
+                    <button ng-init="isShow2 = true" ng-click="isShow2 = !isShow2">{{ isShow2 ? "Hide" : "Show"}}</button>
+                    <div ng-if="isShow2">
+                        <div><magic-radio group="Test_1"></magic-radio></div>
+                        <div><magic-radio group="Test_1"></magic-radio></div>
+                        <div><magic-radio group="Test_1"></magic-radio></div>
+                        <div><magic-radio group="UFO_100"></magic-radio></div>
+                        <div><magic-radio group="UFO_100"></magic-radio></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="thumbnail">
-                    <div><magic-radio group="UFO_500"></magic-radio></div>
-                    <div><magic-radio group="Unicorn_3" is-checked="true"></magic-radio></div>
-                    <div><magic-radio group="Test_1"></magic-radio></div>
-                    <div><magic-radio group="Unicorn_2"></magic-radio></div>
-                    <div><magic-radio group="UFO_500"></magic-radio></div>
-                </div>
-            </div>
-            <div class="col-md-3">
-            <div class="thumbnail">
-                <div><magic-radio group="Unicorn_2" is-checked="true"></magic-radio></div>
-            </div>
-            </div>
-        </dov>
+        </div>
     </div>
 
 </body>
