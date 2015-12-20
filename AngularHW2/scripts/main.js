@@ -11,25 +11,31 @@
             restrict: 'A',
             scope: false,
             link: function($scope, $element, $attrs){
-                console.log('I am run')
-                $document.on('click',function(e){
+                console.log('Directive actionOnClickOutside run');
+
+                $document[0].addEventListener('click', clickOutside, true);
+                $scope.$on('$destroy', function(){
+                    $document[0].removeEventListener('click', clickOutside, true);
+                });
+
+                function clickOutside(e) {
                     var currentNode = e.target;
                     var isOutsideSidebar = true;
                     while (currentNode) {
                         if (currentNode === $element[0]) {
                             isOutsideSidebar = false;
-                        break;
+                            break;
                         }
                         currentNode = currentNode.parentNode;
                     }
-                    console.log(isOutsideSidebar?"Outside":"Inside");
-                    // $element.toggleClass('sidebar-hidden',isOutsideSidebar)
-                    // if (isOutsideSidebar) {
-                    //     $scope.$eval("hideSidebar()");
-                    // }
+                    console.log(isOutsideSidebar ? "Outside" : "Inside");
+                    if (isOutsideSidebar) {
+                        $scope.$eval($attrs.actionOnClickOutside);
+                        $scope.$apply();
+                    }
+                }
 
-                })
-            },
+            }
         };
         return directive;
     }
@@ -38,11 +44,11 @@
         $rootScope.test = {};
         $rootScope.showSidebar = function () {
             $rootScope.test.showSidebar = true;
-        }
+        };
         $rootScope.hideSidebar = function () {
             $rootScope.test.showSidebar =  false;
             //Этой строчки здесь быть не должно, поправьте код директивы
-            $rootScope.$apply();
-        }
+            // $rootScope.$apply();
+        };
     }
 })();
