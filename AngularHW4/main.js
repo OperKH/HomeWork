@@ -2,39 +2,38 @@
     var app = angular.module('app', []);
     app.run(['$rootScope', function($rootScope) {
         $rootScope.cards = [{
-            id: 1,
+            place: 1,
             text: "Card1"
         }, {
-            id: 2,
+            place: 2,
             text: "Card2"
         }, {
-            id: 3,
+            place: 3,
             text: "Card3"
         }, {
-            id: 4,
+            place: 4,
             text: "Card4"
         }, {
-            id: 5,
+            place: 5,
             text: "Card5"
         }, {
-            id: 6,
+            place: 6,
             text: "Card6"
         }, {
-            id: 7,
+            place: 7,
             text: "Card7"
         }];
         $rootScope.openCard = function(card) {
-            debugger
-            console.log('openCard', card);
+            console.log('openCard Function card value:', card);
         };
     }]);
 
     app.directive('smartjsCarousel', [function() {
         return {
             restrict: 'E',
-            template: '<div class="cards-wrapper"><div class="card place{{$index+1}}" ng-repeat="card in smartjsItems track by card.id">{{card.text}}</div></div>',
+            template: '<div class="cards-wrapper"><div class="card place{{card.place}}" ng-repeat="card in smartjsItems track by card.place" ng-click="smartjsAction({card: card})">{{card.text}}</div></div>',
             scope: {
-                smartjsAction: '@',
+                smartjsAction: '&',
                 smartjsItems: '='
             },
             link: function($scope, $element, $attrs) {
@@ -45,25 +44,14 @@
                 $element.on('mouseleave', function(){
                     isHovered = false;
                 });
-                // $element.on('click', function(e){
-                //     var currentElement = e.target;
-                //     while (currentElement) {
-                //         if (currentElement.classList) {
-                //             var classListLength = currentElement.classList.length;
-                //             for (var i = 0; i < classListLength; i++) {
-                //                 var currentClassName = currentElement.classList[i];
-                //                 if (currentClassName === 'card') {
-                //                     console.log('clicked on Card');
-                //                     return;
-                //                 }
-                //             }
-                //         }
-                //         currentElement = currentElement.parentNode;
-                //     }
-                // });
+
                 var intervalId = setInterval(function() {
                     if (!isHovered) {
-                        $scope.smartjsItems.unshift($scope.smartjsItems.pop());
+                        // $scope.smartjsItems.unshift($scope.smartjsItems.pop());
+                        $scope.smartjsItems.forEach(function(card, i, arr) {
+                            var currentPlace = card.place;
+                            arr[i].place = currentPlace === 7 ? 1 : ++currentPlace;
+                        });
                         $scope.$apply();
                     }
                 }, 3000);
@@ -71,10 +59,7 @@
                 $scope.$on('destroy', function(){
                     clearTimeout(intervalId);
                 });
-            },
-            controller: function($scope, $element, $attrs) {
-
-            },
+            }
         };
     }]);
 })();
