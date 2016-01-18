@@ -1,0 +1,12 @@
+map {
+    height: 100vh;
+    display: block;
+}
+.heatmap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    border: 1px solid #666;
+    background-color: #fff;
+}
