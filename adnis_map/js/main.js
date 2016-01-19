@@ -104,7 +104,7 @@
 
                         latLngs = $scope.reports.filter(report => {
                             var dateToFilter = (new Date(report.submissionDate)).valueOf();
-                            return minCountDate <= dateToFilter && dateToFilter <= maxCountDate;
+                            return minCountDate <= dateToFilter && dateToFilter < maxCountDate;
                         }).map(report => [report.location.latitude, report.location.longitude]);
 
                         heatLayer.setLatLngs(latLngs);
