@@ -78,6 +78,7 @@
                 function drawMarkers() {
                     if (timeoutID) {
                         clearTimeout(timeoutID);
+                        timeoutID = null;
                     }
                     map.removeLayer(heatLayer);
                     group.clearLayers();
@@ -91,36 +92,39 @@
                 }
 
                 function drawHeatmap() {
-                    if ($scope.mode.options.isPlaying) {
-                        group.clearLayers();
-                        map.removeLayer(heatLayer);
-                        if ($scope.reports) {
-                            var stepsCount = Math.ceil(size / $scope.mode.options.size);
-                            var stepPercent = 100 / stepsCount;
-                            var currentStep = Math.round($scope.mode.options.position / stepPercent);
+                    if (!$scope.mode.options.isPlaying && timeoutID) {
+                        clearTimeout(timeoutID);
+                        timeoutID = null;
+                        return;
+                    }
+                    group.clearLayers();
+                    map.removeLayer(heatLayer);
+                    if ($scope.reports) {
+                        var stepsCount = Math.ceil(size / $scope.mode.options.size);
+                        var stepPercent = 100 / stepsCount;
+                        var currentStep = Math.round($scope.mode.options.position / stepPercent);
 
-                            var minCountDate = minDate + currentStep * $scope.mode.options.size * 86400000;
-                            var maxCountDate = minCountDate + $scope.mode.options.size * 86400000;
+                        var minCountDate = minDate + currentStep * $scope.mode.options.size * 86400000;
+                        var maxCountDate = minCountDate + $scope.mode.options.size * 86400000;
 
-                            latLngs = $scope.reports.filter(report => {
-                                var dateToFilter = (new Date(report.submissionDate)).valueOf();
-                                return minCountDate <= dateToFilter && dateToFilter < maxCountDate;
-                            }).map(report => [report.location.latitude, report.location.longitude]);
+                        latLngs = $scope.reports.filter(report => {
+                            var dateToFilter = (new Date(report.submissionDate)).valueOf();
+                            return minCountDate <= dateToFilter && dateToFilter < maxCountDate;
+                        }).map(report => [report.location.latitude, report.location.longitude]);
 
-                            heatLayer.setLatLngs(latLngs);
-                            map.addLayer(heatLayer);
+                        heatLayer.setLatLngs(latLngs);
+                        map.addLayer(heatLayer);
 
-                            if ($scope.mode.options.isPlaying) {
-                                currentStep++;
-                                if (currentStep > stepsCount) {
-                                    $scope.mode.options.isPlaying = false;
-                                } else {
-                                    timeoutID = setTimeout(function() {
-                                        $scope.$applyAsync(function() {
-                                            $scope.mode.options.position = currentStep * stepPercent;
-                                        });
-                                    }, 250);
-                                }
+                        if ($scope.mode.options.isPlaying) {
+                            currentStep++;
+                            if (currentStep > stepsCount) {
+                                $scope.mode.options.isPlaying = false;
+                            } else {
+                                timeoutID = setTimeout(function() {
+                                    $scope.$applyAsync(function() {
+                                        $scope.mode.options.position = currentStep * stepPercent;
+                                    });
+                                }, 250);
                             }
                         }
                     }
