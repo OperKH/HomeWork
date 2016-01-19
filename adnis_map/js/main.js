@@ -11,8 +11,8 @@
             type: 'heatmap',
             options: {
                 size: 7,
-                isPlaying: false,
-                position: 100
+                isPlaying: true,
+                position: 0
             }
         };
         $scope.boundingRect = {
@@ -48,53 +48,84 @@
                 mode: '='
             },
             link: function($scope, $element, $attrs) {
-                var group;
-                var arrayofMarkers = [];
+                var datesArr, minDate, maxDate, size, timeoutID;
                 var map = L.map($element[0]).setView([$scope.boundingRect.latitude, $scope.boundingRect.longitude], $scope.boundingRect.zoom);
-                L.tileLayer(
-                    'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                        id: 'examples.map-9ijuk24y'
+                var group = new L.featureGroup();
+                var heatLayer = L.heatLayer([], {blur: 10,maxZoom: 10});
+
+                L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',{id: 'examples.map-9ijuk24y'}).addTo(map);
+                group.addTo(map);
+
+                $scope.$watch('reports', function(){
+                    if ($scope.reports) {
+                        //Рассчитываю количество дней между минимальной и максимальной датой единоразово при обновлении репортов.
+                        datesArr = $scope.reports.map(report => (new Date(report.submissionDate)).valueOf());
+                        minDate = Math.min.apply(null, datesArr);
+                        maxDate = Math.max.apply(null, datesArr);
+                        size = getDaysBetweenDates(minDate, maxDate);
                     }
-                ).addTo(map);
+                    drawLayers();
+                });
+                $scope.$watch('mode', drawLayers, true);
 
-                $scope.$watch('reports', drawMarkers);
-
-                $scope.$watch('mode', function(newmode, oldmode){
-                    console.log('Mode:',newmode);
+                function drawLayers() {
                     if ($scope.mode.type === "normal") {
-                        drawMarkers($scope.reports);
+                        drawMarkers();
                     } else if ($scope.mode.type === "heatmap") {
                         drawHeatmap();
                     }
+                }
 
-                }, true );
-                group = new L.featureGroup();
-                group.addTo(map);
+                function drawMarkers() {
+                    if (timeoutID) {
+                        clearTimeout(timeoutID);
+                    }
+                    map.removeLayer(heatLayer);
+                    group.clearLayers();
+                    if ($scope.reports) {
+                        $scope.reports.forEach(function(report) {
+                            var loc = report.location;
+                            L.marker([loc.latitude, loc.longitude]).addTo(group);
+                        });
+                        map.fitBounds(group.getBounds().pad(0.1));
+                    }
+                }
 
-                var heatLayer = L.heatLayer([], {blur: 10,maxZoom: 10});
+                function drawHeatmap() {
+                    group.clearLayers();
+                    map.removeLayer(heatLayer);
+                    if ($scope.reports) {
+                        var stepsCount = Math.ceil(size / $scope.mode.options.size);
+                        var stepPercent = 100 / stepsCount;
+                        var currentStep = Math.round($scope.mode.options.position / stepPercent);
 
-                function drawMarkers(newreports, oldreports) {
-                    if ($scope.mode.type === "normal") {
-                        map.removeLayer(heatLayer);
-                        group.clearLayers();
-                        if (newreports) {
-                            newreports.forEach(function(report) {
-                                var loc = report.location;
-                                L.marker([loc.latitude, loc.longitude]).addTo(group);
-                            });
-                            map.fitBounds(group.getBounds().pad(0.1));
+                        var minCountDate = minDate + currentStep * $scope.mode.options.size * 86400000;
+                        var maxCountDate = minCountDate + $scope.mode.options.size * 86400000;
+
+                        latLngs = $scope.reports.filter(report => {
+                            var dateToFilter = (new Date(report.submissionDate)).valueOf();
+                            return minCountDate <= dateToFilter && dateToFilter <= maxCountDate;
+                        }).map(report => [report.location.latitude, report.location.longitude]);
+
+                        heatLayer.setLatLngs(latLngs);
+                        map.addLayer(heatLayer);
+
+                        if ($scope.mode.options.isPlaying) {
+                            currentStep++;
+                            if (currentStep > stepsCount) {
+                                $scope.mode.options.isPlaying = false;
+                            } else {
+                                timeoutID = setTimeout(function(){
+                                    $scope.mode.options.position = currentStep * stepPercent;
+                                    $scope.$applyAsync();
+                                }, 250);
+                            }
                         }
                     }
                 }
-                function drawHeatmap(){
-                    if ($scope.mode.type === "heatmap") {
-                        group.clearLayers();
-                        map.removeLayer(heatLayer);
 
-                        latLngs = $scope.reports.map(report => [report.location.latitude, report.location.longitude]);
-                        heatLayer.setLatLngs(latLngs);
-                        map.addLayer(heatLayer);
-                    }
+                function getDaysBetweenDates(minDate, maxDate) {
+                    return ( (new Date(maxDate)) - (new Date(minDate)) ) / 86400000;
                 }
 
             },
