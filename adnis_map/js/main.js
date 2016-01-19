@@ -49,7 +49,7 @@
             link: function($scope, $element, $attrs) {
                 var datesArr, minDate, maxDate, size, timeoutID;
                 var map = L.map($element[0]).setView([$scope.boundingRect.latitude, $scope.boundingRect.longitude], $scope.boundingRect.zoom);
-                var group = new L.featureGroup();
+                var group = new L.markerClusterGroup();
                 var heatLayer = L.heatLayer([], {blur: 10,maxZoom: 10});
 
                 L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',{id: 'examples.map-9ijuk24y'}).addTo(map);
