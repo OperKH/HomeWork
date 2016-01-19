@@ -1,12 +1,33 @@
 map {
-    height: 100vh;
     display: block;
+    height: 100vh;
 }
 .heatmap {
-    position: absolute;
     top: 0;
     right: 0;
+}
+
+.popup-element {
+    position: absolute;
     padding: 15px;
-    border: 1px solid #666;
-    background-color: #fff;
+    opacity: .8;
+    color: white;
+    background-color: black;
+}
+
+.heat-map-player {
+    bottom: 0;
+    left: 50%;
+    width: 30vw;
+    margin-left: -15vw;
+}
+.heat-map-player table td {
+    padding: 0 5px;
+}
+.heat-map-player table td:last-child {
+    width: 100%;
+}
+.heat-map-player table td button {
+    width: 60px;
+    color: black;
 }

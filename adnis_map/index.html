@@ -12,11 +12,22 @@
     <script src="js/main.js"></script>
 </head>
 <body>
-    <div ng-controller="mainCtrl">
-        <map mode="mode" reports="reports" bounding-rect="boundingRect"></map>
-        <div class="heatmap">
-            <label><input type="checkbox" ng-model="isHeatMap" ng-click="changeMode()"><span>Heatmap</span></label>
+    <div ng-controller="mainCtrl as main">
+        <map mode="main.mode" reports="main.reports" bounding-rect="main.boundingRect"></map>
+        <div class="heatmap popup-element">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="main.isHeatMap" ng-click="main.changeMode()">Heatmap</label>
+            </div>
+
         </div>
+        <div class="heat-map-player popup-element" ng-if="main.mode.type === 'heatmap'">
+            <table>
+                <tr>
+                    <td><button ng-click="main.mode.options.isPlaying = !main.mode.options.isPlaying">{{ main.mode.options.isPlaying ? "Pause" : "Play" }}</button></td>
+                    <td><input type="range" min="0" max="100" ng-model="main.mode.options.position"></div></td>
+                </tr>
+            </table>
+
     </div>
 </body>
 </html>

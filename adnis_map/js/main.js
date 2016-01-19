@@ -2,7 +2,6 @@
     var adnis = angular.module('adnis', []);
 
     adnis.controller('mainCtrl', ['$scope','$http', function($scope, $http) {
-
         var normalmode = {
             type: 'normal'
         };
@@ -15,25 +14,25 @@
                 position: 0
             }
         };
-        $scope.boundingRect = {
+        this.boundingRect = {
             latitude: 5.877674994795961,
             longitude: 38.45339266561527,
             zoom: 5
         };
 
         $http.defaults.headers.common.Authorization = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjUzZjMzYzhkMjk0N2NkNDU2ZmI5NGJjMyI.jY0oeE2D3-D14d6Z2WqILKfWR5PTduau6R492czGJ80';
-        $http.get('http://notification.systems/api/filterReports').then(function(resp){
+        $http.get('http://notification.systems/api/filterReports').then(resp => {
             console.log('resp',resp);
-            $scope.reports = resp.data.reports;
+            this.reports = resp.data.reports;
         });
 
-        $scope.mode = normalmode;
+        this.mode = normalmode;
 
-        $scope.changeMode = function() {
-            if ($scope.isHeatMap) {
-                $scope.mode = heatmapMode;
+        this.changeMode = () => {
+            if (this.isHeatMap) {
+                this.mode = heatmapMode;
             } else {
-                $scope.mode = normalmode;
+                this.mode = normalmode;
             }
         };
 
@@ -92,33 +91,36 @@
                 }
 
                 function drawHeatmap() {
-                    group.clearLayers();
-                    map.removeLayer(heatLayer);
-                    if ($scope.reports) {
-                        var stepsCount = Math.ceil(size / $scope.mode.options.size);
-                        var stepPercent = 100 / stepsCount;
-                        var currentStep = Math.round($scope.mode.options.position / stepPercent);
+                    if ($scope.mode.options.isPlaying) {
+                        group.clearLayers();
+                        map.removeLayer(heatLayer);
+                        if ($scope.reports) {
+                            var stepsCount = Math.ceil(size / $scope.mode.options.size);
+                            var stepPercent = 100 / stepsCount;
+                            var currentStep = Math.round($scope.mode.options.position / stepPercent);
 
-                        var minCountDate = minDate + currentStep * $scope.mode.options.size * 86400000;
-                        var maxCountDate = minCountDate + $scope.mode.options.size * 86400000;
+                            var minCountDate = minDate + currentStep * $scope.mode.options.size * 86400000;
+                            var maxCountDate = minCountDate + $scope.mode.options.size * 86400000;
 
-                        latLngs = $scope.reports.filter(report => {
-                            var dateToFilter = (new Date(report.submissionDate)).valueOf();
-                            return minCountDate <= dateToFilter && dateToFilter < maxCountDate;
-                        }).map(report => [report.location.latitude, report.location.longitude]);
+                            latLngs = $scope.reports.filter(report => {
+                                var dateToFilter = (new Date(report.submissionDate)).valueOf();
+                                return minCountDate <= dateToFilter && dateToFilter < maxCountDate;
+                            }).map(report => [report.location.latitude, report.location.longitude]);
 
-                        heatLayer.setLatLngs(latLngs);
-                        map.addLayer(heatLayer);
+                            heatLayer.setLatLngs(latLngs);
+                            map.addLayer(heatLayer);
 
-                        if ($scope.mode.options.isPlaying) {
-                            currentStep++;
-                            if (currentStep > stepsCount) {
-                                $scope.mode.options.isPlaying = false;
-                            } else {
-                                timeoutID = setTimeout(function(){
-                                    $scope.mode.options.position = currentStep * stepPercent;
-                                    $scope.$applyAsync();
-                                }, 250);
+                            if ($scope.mode.options.isPlaying) {
+                                currentStep++;
+                                if (currentStep > stepsCount) {
+                                    $scope.mode.options.isPlaying = false;
+                                } else {
+                                    timeoutID = setTimeout(function() {
+                                        $scope.$applyAsync(function() {
+                                            $scope.mode.options.position = currentStep * stepPercent;
+                                        });
+                                    }, 250);
+                                }
                             }
                         }
                     }
