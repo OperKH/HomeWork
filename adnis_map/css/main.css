@@ -31,3 +31,8 @@ map {
     width: 60px;
     color: black;
 }
+
+.checkbox,
+.radio {
+    margin: 0;
+}
