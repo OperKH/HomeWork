@@ -124,7 +124,7 @@
                                     $scope.$applyAsync(function() {
                                         $scope.mode.options.position = currentStep * stepPercent;
                                     });
-                                }, 250);
+                                }, 1000);
                             }
                         }
                     }
