@@ -68,6 +68,10 @@
                 $scope.$watch('mode', drawLayers, true);
 
                 function drawLayers() {
+                    if (timeoutID) {
+                        clearTimeout(timeoutID);
+                        timeoutID = null;
+                    }
                     if ($scope.mode.type === "normal") {
                         drawMarkers();
                     } else if ($scope.mode.type === "heatmap") {
@@ -76,10 +80,6 @@
                 }
 
                 function drawMarkers() {
-                    if (timeoutID) {
-                        clearTimeout(timeoutID);
-                        timeoutID = null;
-                    }
                     map.removeLayer(heatLayer);
                     group.clearLayers();
                     if ($scope.reports) {
@@ -92,11 +92,6 @@
                 }
 
                 function drawHeatmap() {
-                    if (!$scope.mode.options.isPlaying && timeoutID) {
-                        clearTimeout(timeoutID);
-                        timeoutID = null;
-                        return;
-                    }
                     group.clearLayers();
                     map.removeLayer(heatLayer);
                     if ($scope.reports) {
