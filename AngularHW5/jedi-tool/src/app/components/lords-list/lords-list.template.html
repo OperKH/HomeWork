@@ -1,0 +1,14 @@
+<section class="css-scrollable-list">
+  <ul class="css-slots">
+
+    <li class="css-slot" ng-repeat="lord in lords">
+      <h3>{{lord.data.name}} {{lord.data.id}}</h3>
+      <h6>{{lord.data.homeworld.name ? 'Homeworld: ' + lord.data.homeworld.name + '  Master:' + lord.data.master.id: ''}}</h6>
+    </li>
+  </ul>
+
+  <div class="css-scroll-buttons">
+    <button class="css-button-up"></button>
+    <button class="css-button-down"></button>
+  </div>
+</section>
