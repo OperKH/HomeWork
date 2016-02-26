@@ -15,21 +15,9 @@
             currentPage: 1
         };
 
-        $scope.getSymptoms = function() {
-            symptomsResource.$cancelRequest();
-
-            queryParams.skip = ($scope.pagination.currentPage - 1) * $scope.pagination.itemsPerPage;
-            // queryParams.limit = $scope.pagination.itemsPerPage;
-
-            symptomsResource = SymptomsService.query(queryParams);
-            symptomsResource.$promise.then(function() {
-                $scope.symptoms = symptomsResource;
-            });
-        };
+        $scope.getSymptoms = _getSymptoms;
 
         $scope.getSymptoms();
-
-
 
         $scope.remove = function() {
             var selected = $scope.symptoms.filter(function(symptom){
@@ -44,7 +32,11 @@
                 templateUrl: 'templates/modalTemplate.html',
                 controller: function($scope, $uibModalInstance){
                     $scope.ok = function () {
-
+                        console.log($scope.formData);
+                        SymptomsService.save($scope.formData).$promise.then(function(data){
+                            $uibModalInstance.dismiss('save');
+                            _getSymptoms();
+                        });
                     };
                     $scope.cancel = function() {
                         $uibModalInstance.dismiss('cancel');
@@ -53,6 +45,18 @@
                 }
             });
         };
+
+        function _getSymptoms() {
+            symptomsResource.$cancelRequest();
+
+            queryParams.skip = ($scope.pagination.currentPage - 1) * $scope.pagination.itemsPerPage;
+            // queryParams.limit = $scope.pagination.itemsPerPage;
+
+            symptomsResource = SymptomsService.query(queryParams);
+            symptomsResource.$promise.then(function() {
+                $scope.symptoms = symptomsResource;
+            });
+        }
     });
 
     adnis.factory('SymptomsService', function($resource) {

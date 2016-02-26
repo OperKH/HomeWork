@@ -20,7 +20,8 @@
                     };
 
                     $scope.ok = function () {
-
+                        console.log($scope.formData);
+                        SpeciesService.save($scope.formData);
                     };
                     $scope.cancel = function() {
                         $uibModalInstance.dismiss('cancel');
