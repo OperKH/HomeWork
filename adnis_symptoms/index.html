@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="adnis">
+<head>
+    <meta charset="UTF-8">
+    <title>Symptoms</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-resource.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.1/ui-bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.1/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="js/main.js"></script>
+</head>
+<body>
+<div class="container">
+    <div ng-controller="SymptomsCtrl">
+        <div class="row">
+            <div class="buttonGroup col-xs-3">
+                <button type="button" class="btn btn-info" ng-click="openModal()">Add</button>
+                <button type="button" class="btn btn-danger" ng-click="remove()">Remove</button>
+            </div>
+            <div class="col-xs-4 pull-right">
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Key</th>
+            </tr>
+            <tr ng-repeat="element in symptoms">
+                <td style="width: 15px;">
+                    <input type="checkbox" ng-model="element.selected">
+                </td>
+                <td>{{element.name}}</td>
+                <td>{{element.key}}</td>
+            </tr>
+        </table>
+        <uib-pagination
+            total-items="symptoms.$total"
+            items-per-page="pagination.itemsPerPage"
+            max-size="7"
+            ng-model="pagination.currentPage"
+            ng-change="getSymptoms()"
+            boundary-link-numbers="true"
+            force-ellipses="true"
+            rotate="true"
+            class="pagination-sm">
+        </uib-pagination>
+
+    </div>
+</div>
+</body>
+</html>

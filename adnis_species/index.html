@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="adnis">
+<head>
+    <meta charset="UTF-8">
+    <title>Species</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-resource.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.1/ui-bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.1/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="js/main.js"></script>
+</head>
+<body>
+<div class="container">
+    <div ng-controller="SpeciesCtrl">
+        <div class="row">
+            <div class="buttonGroup col-xs-3">
+                <button type="button" class="btn btn-info" ng-click="openModal()">Add</button>
+                <button type="button" class="btn btn-danger" ng-click="remove($index)">Remove</button>
+            </div>
+            <div class="col-xs-4 pull-right">
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Key</th>
+                <th>Color</th>
+            </tr>
+            <tr ng-repeat="element in species">
+                <td style="width: 15px;">
+                    <input type="checkbox" ng-model="element.selected">
+                </td>
+                <td>{{element.name}}</td>
+                <td>{{element.key}}</td>
+                <td style="color: {{element.color}}">{{element.color}}</td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>
