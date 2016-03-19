@@ -1,7 +1,7 @@
 (function() {
     var adnis = angular.module('adnis', ['ngResource', 'ui.bootstrap']);
 
-    adnis.controller('SymptomsCtrl', function($scope, $uibModal, SymptomsService, elementsPerPageConst) {
+    adnis.controller('SymptomsCtrl', function($scope, $uibModal, SymptomsService, SymptomsServiceList, elementsPerPageConst) {
         var symptomsResource = {
             $cancelRequest: function(){}
         };
@@ -10,6 +10,12 @@
             limit: elementsPerPageConst
         };
 
+        $scope.isPag = false;
+
+        $scope.$watch('isPag', function(){
+            _getSymptoms();
+        });
+
         $scope.pagination = {
             itemsPerPage: elementsPerPageConst,
             currentPage: 1
@@ -17,14 +23,30 @@
 
         $scope.getSymptoms = _getSymptoms;
 
-        $scope.getSymptoms();
+        // $scope.getSymptoms();
 
         $scope.remove = function() {
             var selected = $scope.symptoms.filter(function(symptom){
                 return symptom.selected;
             });
 
-            SymptomsService.remove({_id: "53f622a843e3552327c32ffbu"});
+            var selectedLength = selected.length;
+            var index = 0;
+
+            sequenceDelete();
+
+            function sequenceDelete() {
+                if (index < selectedLength) {
+                    console.log('Delete:',selected[index].key);
+                    removeSymptom(selected[index++]._id).then(sequenceDelete);
+                } else {
+                    _getSymptoms();
+                }
+            }
+
+            function removeSymptom(id) {
+                return SymptomsService.remove({id: id}).$promise;
+            }
         };
 
         $scope.openModal = function(){
@@ -47,21 +69,27 @@
         };
 
         function _getSymptoms() {
+            var service;
+
             symptomsResource.$cancelRequest();
 
-            queryParams.skip = ($scope.pagination.currentPage - 1) * $scope.pagination.itemsPerPage;
-            // queryParams.limit = $scope.pagination.itemsPerPage;
+            if ($scope.isPag) {
+                queryParams.skip = ($scope.pagination.currentPage - 1) * $scope.pagination.itemsPerPage;
+                // queryParams.limit = $scope.pagination.itemsPerPage;
+                symptomsResource = SymptomsServiceList.query(queryParams);
+            } else {
+                symptomsResource = SymptomsService.query();
+            }
 
-            symptomsResource = SymptomsService.query(queryParams);
             symptomsResource.$promise.then(function() {
                 $scope.symptoms = symptomsResource;
             });
         }
     });
 
-    adnis.factory('SymptomsService', function($resource) {
+    adnis.factory('SymptomsServiceList', function($resource) {
         return $resource('http://adnis.smartjs.academy/list/:id', {}, {
-            'query': {
+            query: {
                 method: 'GET',
                 cancellable: true,
                 isArray: true,
@@ -78,6 +106,33 @@
                     }
                 }
             },
+        });
+    });
+
+
+    adnis.factory('SymptomsService', function($resource) {
+        var authKey = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjUzZjMzYzhkMjk0N2NkNDU2ZmI5NGJjMyI.jY0oeE2D3-D14d6Z2WqILKfWR5PTduau6R492czGJ80';
+        return $resource('http://notification.systems/api/symptoms/:id', {}, {
+            query: {
+                method: 'GET',
+                cancellable: true,
+                isArray: true,
+                headers: {
+                    Authorization: authKey
+                }
+            },
+            save: {
+                method: 'POST',
+                headers: {
+                    Authorization: authKey
+                }
+            },
+            remove: {
+                method:'DELETE',
+                headers: {
+                    Authorization: authKey
+                }
+            }
         });
     });
 

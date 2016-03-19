@@ -17,7 +17,10 @@
 <div class="container">
     <div ng-controller="SymptomsCtrl">
         <div class="row">
-            <div class="buttonGroup col-xs-3">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="isPag">Pagination is {{isPag ? "ON" : "OFF"}}</label>
+            </div>
+            <div class="buttonGroup col-xs-3" ng-if="!isPag">
                 <button type="button" class="btn btn-info" ng-click="openModal()">Add</button>
                 <button type="button" class="btn btn-danger" ng-click="remove()">Remove</button>
             </div>
@@ -39,6 +42,7 @@
             </tr>
         </table>
         <uib-pagination
+            ng-if="isPag"
             total-items="symptoms.$total"
             items-per-page="pagination.itemsPerPage"
             max-size="7"
