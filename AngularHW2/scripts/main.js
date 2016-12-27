@@ -10,31 +10,19 @@
         var directive = {
             restrict: 'A',
             scope: false,
-            link: function($scope, $element, $attrs){
-                console.log('Directive actionOnClickOutside run');
-
-                $document[0].addEventListener('click', clickOutside, true);
-                $scope.$on('$destroy', function(){
-                    $document[0].removeEventListener('click', clickOutside, true);
+            link: function (scope, el, attrs) {
+                $document[0].addEventListener('click', clickOutsideHandler, true);
+                scope.$on('$destroy', function(){
+                    $document[0].removeEventListener('click', clickOutsideHandler, true);
                 });
 
-                function clickOutside(e) {
-                    var currentNode = e.target;
-                    var isOutsideSidebar = true;
-                    while (currentNode) {
-                        if (currentNode === $element[0]) {
-                            isOutsideSidebar = false;
-                            break;
-                        }
-                        currentNode = currentNode.parentNode;
-                    }
-                    console.log(isOutsideSidebar ? "Outside" : "Inside");
-                    if (isOutsideSidebar) {
-                        $scope.$eval($attrs.actionOnClickOutside);
-                        $scope.$apply();
+                function clickOutsideHandler(e) {
+                    if (el !== e.target && !el[0].contains(e.target)) {
+                        scope.$applyAsync(function () {
+                            scope.$eval(attrs.clickOutside);
+                        });
                     }
                 }
-
             }
         };
         return directive;
